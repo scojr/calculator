@@ -1,10 +1,23 @@
 // script.js
 
+let firstNumber;
+let secondNumber;
+const operators = {
+  "+": add,
+  "-": subtract,
+  "*": multiply,
+  "/": divide,
+}
+
+function operate(firstN, oper, secondN) {
+  return operators[oper](firstN, secondN);
+}
+
 function add(numOne, numTwo) {
   return numOne + numTwo;
 }
 
-function substract(numOne, numTwo) {
+function subtract(numOne, numTwo) {
   return numOne - numTwo;
 
 }
