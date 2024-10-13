@@ -1,11 +1,7 @@
 // script.js
-let userInput = "";
-let firstNumber = "";
-let secondNumber = "";
+let currentNumber = 0;
 let userOperation = "";
-let displayContent = "";
-
-let resultHistory = [];
+let previousNumber = 0;
 
 const operators = {
   "+": add,
@@ -15,11 +11,9 @@ const operators = {
 }
 
 document.addEventListener("click", () => {
-  console.log(`userInput: ${userInput}`);
-  console.log(`firstNumber: ${firstNumber}`);
-  console.log(`secondNumber: ${secondNumber}`);
+  console.log(`currentNumber: ${currentNumber}`);
+  console.log(`previousNumber: ${previousNumber}`);
   console.log(`userOperation: ${userOperation}`);
-  console.log(`displayContent: ${displayContent}`);
   console.log(`--------------------------------`);
 })
 
@@ -27,55 +21,76 @@ const numButtons = buttons.querySelectorAll(".numButton");
 const operationButtons = buttons.querySelectorAll(".operationButton");
 const equalsButton = buttons.querySelector("#equalsButton");
 const clearButton = buttons.querySelector("#clearButton");
-const resultHistoryDisplay = document.querySelector("#resultHistoryDisplay");
 
 numButtons.forEach(item => {
-  item.addEventListener("click", () => updateDisplay(userInput += (item.textContent)));
+  item.addEventListener("click", () => {
+    if (previousNumber && !userOperation) {
+      setPreviousNumber(0);
+    }
+
+    setCurrentNumber(currentNumber += (item.textContent));
+  });
 });
 
 operationButtons.forEach(item => {
   item.addEventListener("click", () => {
-    if (userInput && firstNumber) {
-      operate(parseInt(firstNumber), userOperation, parseInt(userInput));
+    if (!previousNumber) setPreviousNumber(currentNumber);
+    if (userOperation) {
+      operate(previousNumber, userOperation, currentNumber)
+      userOperation = (item.textContent);
+      document.querySelector("#operationDisplay").textContent = userOperation;
+    } else {
+      userOperation = (item.textContent);
+      document.querySelector("#operationDisplay").textContent = userOperation;
     }
-    firstNumber = userInput;
-    userInput = "";
-    updateDisplay(">")
-    userOperation = (item.textContent);
   })
 });
 
 equalsButton.addEventListener("click", () => {
-  if (userOperation && userInput) {
-    secondNumber = userInput;
-    operate(parseInt(firstNumber), userOperation, parseInt(secondNumber));
+  if (userOperation) {
+    operate(previousNumber, userOperation, currentNumber)
+    setCurrentNumber(0);
   }
   userOperation = "";
+  document.querySelector("#operationDisplay").textContent = "";
 });
 
 clearButton.addEventListener("click", () => {
-  userInput = "";
-  firstNumber = "";
-  secondNumber = "";
-  userOperation = "";
-  resultHistoryDisplay.textContent = ">";
-  updateDisplay(">")
+  clear()
 });
 
-function updateDisplay(content) {
-  let displayContent = content;
-  display.textContent = displayContent;
+function setCurrentNumber(content) {
+  const display = document.querySelector("#display");
+  currentNumber = content;
+  display.textContent = parseInt(content);
+}
+
+function setPreviousNumber(input) {
+  const previousNumberDisplay = document.querySelector("#previousNumberDisplay");
+  if (input == Infinity) {
+    clear()
+    previousNumberDisplay.textContent = ("ERROR!");
+    return;
+  }
+  previousNumber = input;
+  previousNumberDisplay.textContent = parseInt(input);
+  setCurrentNumber(0);
+}
+
+function clear() {
+  currentNumber = "";
+  userOperation = "";
+  document.querySelector("#operationDisplay").textContent = "";
+  setCurrentNumber(0);
+  setPreviousNumber(0);
 }
 
 function operate(firstN, oper, secondN) {
-  const result = parseInt(operators[oper](firstN, secondN));
-  resultHistory.unshift(result);
-  resultHistoryDisplay.textContent = result;
-  userInput = "";
-  firstNumber = "";
-  secondNumber = "";
+  const result = operators[oper](parseInt(firstN), parseInt(secondN));
+  currentNumber = "";
   userOperation = "";
-  updateDisplay(">")
+  setCurrentNumber(0);
+  setPreviousNumber(result);
   return result;
 }
 function add(numOne, numTwo) {
