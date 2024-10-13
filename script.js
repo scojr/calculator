@@ -14,10 +14,20 @@ const operators = {
   "÷": divide,
 }
 
+document.addEventListener("click", () => {
+  console.log(`userInput: ${userInput}`);
+  console.log(`firstNumber: ${firstNumber}`);
+  console.log(`secondNumber: ${secondNumber}`);
+  console.log(`userOperation: ${userOperation}`);
+  console.log(`displayContent: ${displayContent}`);
+  console.log(`--------------------------------`);
+})
+
 const numButtons = buttons.querySelectorAll(".numButton");
 const operationButtons = buttons.querySelectorAll(".operationButton");
 const equalsButton = buttons.querySelector("#equalsButton");
 const clearButton = buttons.querySelector("#clearButton");
+const resultHistoryDisplay = document.querySelector("#resultHistoryDisplay");
 
 numButtons.forEach(item => {
   item.addEventListener("click", () => updateDisplay(userInput += (item.textContent)));
@@ -25,6 +35,9 @@ numButtons.forEach(item => {
 
 operationButtons.forEach(item => {
   item.addEventListener("click", () => {
+    if (userInput && firstNumber) {
+      operate(parseInt(firstNumber), userOperation, parseInt(userInput));
+    }
     firstNumber = userInput;
     userInput = "";
     updateDisplay(">")
@@ -35,7 +48,7 @@ operationButtons.forEach(item => {
 equalsButton.addEventListener("click", () => {
   if (userOperation && userInput) {
     secondNumber = userInput;
-    display.textContent = (operate(parseInt(firstNumber), userOperation, parseInt(secondNumber)))
+    operate(parseInt(firstNumber), userOperation, parseInt(secondNumber));
   }
   userOperation = "";
 });
@@ -45,18 +58,24 @@ clearButton.addEventListener("click", () => {
   firstNumber = "";
   secondNumber = "";
   userOperation = "";
+  resultHistoryDisplay.textContent = ">";
   updateDisplay(">")
 });
 
 function updateDisplay(content) {
-  displayContent = content;
+  let displayContent = content;
   display.textContent = displayContent;
 }
 
 function operate(firstN, oper, secondN) {
   const result = parseInt(operators[oper](firstN, secondN));
   resultHistory.unshift(result);
-  userInput = result;
+  resultHistoryDisplay.textContent = result;
+  userInput = "";
+  firstNumber = "";
+  secondNumber = "";
+  userOperation = "";
+  updateDisplay(">")
   return result;
 }
 function add(numOne, numTwo) {
