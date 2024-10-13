@@ -3,12 +3,15 @@ let userInput = "";
 let firstNumber = "";
 let secondNumber = "";
 let userOperation = "";
+let displayContent = "";
+
+let resultHistory = [];
 
 const operators = {
   "+": add,
   "-": subtract,
   "*": multiply,
-  "/": divide,
+  "÷": divide,
 }
 
 const numButtons = buttons.querySelectorAll(".numButton");
@@ -17,23 +20,24 @@ const equalsButton = buttons.querySelector("#equalsButton");
 const clearButton = buttons.querySelector("#clearButton");
 
 numButtons.forEach(item => {
-  item.addEventListener("click", () => display.textContent = userInput += (item.textContent));
+  item.addEventListener("click", () => updateDisplay(userInput += (item.textContent)));
 });
 
 operationButtons.forEach(item => {
   item.addEventListener("click", () => {
     firstNumber = userInput;
     userInput = "";
-    display.textContent = "00000"
+    updateDisplay(">")
     userOperation = (item.textContent);
   })
 });
 
 equalsButton.addEventListener("click", () => {
-  if (firstNumber) {
+  if (userOperation && userInput) {
     secondNumber = userInput;
     display.textContent = (operate(parseInt(firstNumber), userOperation, parseInt(secondNumber)))
   }
+  userOperation = "";
 });
 
 clearButton.addEventListener("click", () => {
@@ -41,11 +45,19 @@ clearButton.addEventListener("click", () => {
   firstNumber = "";
   secondNumber = "";
   userOperation = "";
-  display.textContent = "00000"
+  updateDisplay(">")
 });
 
+function updateDisplay(content) {
+  displayContent = content;
+  display.textContent = displayContent;
+}
+
 function operate(firstN, oper, secondN) {
-  return operators[oper](firstN, secondN);
+  const result = parseInt(operators[oper](firstN, secondN));
+  resultHistory.unshift(result);
+  userInput = result;
+  return result;
 }
 function add(numOne, numTwo) {
   return numOne + numTwo;
