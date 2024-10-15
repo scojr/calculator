@@ -17,26 +17,24 @@ document.addEventListener("click", () => {
   console.log(`--------------------------------`);
 })
 
-const numButtons = buttons.querySelectorAll(".numButton");
-const decimalButton = buttons.querySelector("#decimalButton")
-const operationButtons = buttons.querySelectorAll(".operationButton");
-const equalsButton = buttons.querySelector("#equalsButton");
-const clearButton = document.querySelector("#clearButton");
 
+const numButtons = buttons.querySelectorAll(".numButton");
 numButtons.forEach(item => {
   item.addEventListener("click", () => {
     if (previousNumber && !userOperation) {
-      setPreviousNumber();
+      setPreviousNumber(0);
     }
 
     if (String(currentNumber).length < 7) setCurrentNumber(currentNumber += (item.textContent));
   });
 });
 
+const decimalButton = buttons.querySelector("#decimalButton")
 decimalButton.addEventListener("click", () => {
   if (parseFloat(currentNumber) % 1 == 0) setCurrentNumber(currentNumber += decimalButton.textContent, true);
 });
 
+const operationButtons = buttons.querySelectorAll(".operationButton");
 operationButtons.forEach(item => {
   item.addEventListener("click", () => {
     if (!previousNumber) setPreviousNumber(currentNumber);
@@ -51,6 +49,7 @@ operationButtons.forEach(item => {
   })
 });
 
+const equalsButton = buttons.querySelector("#equalsButton");
 equalsButton.addEventListener("click", () => {
   if (userOperation) {
     operate(previousNumber, userOperation, currentNumber)
@@ -60,9 +59,18 @@ equalsButton.addEventListener("click", () => {
   document.querySelector("#operationDisplay").textContent = "";
 });
 
+const clearButton = document.querySelector("#clearButton");
 clearButton.addEventListener("click", () => {
   clear()
 });
+
+function clear() {
+  currentNumber = "";
+  userOperation = "";
+  document.querySelector("#operationDisplay").textContent = "";
+  setCurrentNumber(0);
+  setPreviousNumber(0);
+}
 
 function setCurrentNumber(content, decimal) {
   const display = document.querySelector("#display");
@@ -77,17 +85,10 @@ function setPreviousNumber(input) {
     previousNumberDisplay.textContent = ("ERROR!");
     return;
   }
-  previousNumber = input;
-  previousNumberDisplay.textContent = parseFloat(input);
-  setCurrentNumber(0);
-}
+  previousNumber = Math.round(parseFloat(input) * 100) / 100;
 
-function clear() {
-  currentNumber = "";
-  userOperation = "";
-  document.querySelector("#operationDisplay").textContent = "";
+  previousNumberDisplay.textContent = previousNumber;
   setCurrentNumber(0);
-  setPreviousNumber(0);
 }
 
 function operate(firstN, oper, secondN) {
