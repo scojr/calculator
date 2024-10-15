@@ -4,39 +4,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Calculator</title>
+  <link rel="stylesheet" href="style.css">
   <script src="./script.js" defer></script>
 </head>
 
 <body>
   <div id="container">
-    <div><span id="previousNumberDisplay">0</span><span id="operationDisplay"></span></div>
-    <div id="display">0</div>
+    <div id="topBar">
+      <div id="screen">
+        <div id="previousNumberDisplay">0</div>
+        <div id="operationDisplay"></div>
+        <div id="display">0</div>
+      </div>
+      <button id="clearButton">C</button>
+    </div>
     <div id="buttons">
-      <div>
+      <div class="numRow" id="row1">
         <button class="numButton" id="7B">7</button>
         <button class="numButton" id="9B">8</button>
         <button class="numButton" id="9B">9</button>
-        <button class="operationButton" id="addButton">+</button>
+        <button class="operationButton" id="divideButton">÷</button>
       </div>
-      <div>
+      <div class="numRow" id="row2">
         <button class="numButton" id="4B">4</button>
         <button class="numButton" id="5B">5</button>
         <button class="numButton" id="6B">6</button>
-        <button class="operationButton" id="subtractButton">-</button>
+        <button class="operationButton" id="multiplyButton">*</button>
       </div>
-      <div>
+      <div class="numRow" id="row3">
         <button class="numButton" id="1B">1</button>
         <button class="numButton" id="2B">2</button>
         <button class="numButton" id="3B">3</button>
-        <button class="operationButton" id="multiplyButton">*</button>
+        <button class="operationButton" id="subtractButton">-</button>
       </div>
-      <div>
+      <div class="numRow" id="row4">
         <button class="numButton" id="zeroButton">0</button>
-        <button id="clearButton">Clear</button>
-        <button class="operationButton" id="divideButton">÷</button>
-      </div>
-      <div>
+        <button class="numButton" id="decimalButton">.</button>
         <button id="equalsButton">=</button>
+        <button class="operationButton" id="addButton">+</button>
       </div>
     </div>
   </div>
