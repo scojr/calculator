@@ -1,5 +1,5 @@
 // script.js
-let currentNumber = 0;
+let currentNumber = "";
 let userOperation = "";
 let previousNumber = 0;
 
@@ -18,18 +18,23 @@ document.addEventListener("click", () => {
 })
 
 const numButtons = buttons.querySelectorAll(".numButton");
+const decimalButton = buttons.querySelector("#decimalButton")
 const operationButtons = buttons.querySelectorAll(".operationButton");
 const equalsButton = buttons.querySelector("#equalsButton");
-const clearButton = buttons.querySelector("#clearButton");
+const clearButton = document.querySelector("#clearButton");
 
 numButtons.forEach(item => {
   item.addEventListener("click", () => {
     if (previousNumber && !userOperation) {
-      setPreviousNumber(0);
+      setPreviousNumber();
     }
 
-    setCurrentNumber(currentNumber += (item.textContent));
+    if (String(currentNumber).length < 7) setCurrentNumber(currentNumber += (item.textContent));
   });
+});
+
+decimalButton.addEventListener("click", () => {
+  if (parseFloat(currentNumber) % 1 == 0) setCurrentNumber(currentNumber += decimalButton.textContent, true);
 });
 
 operationButtons.forEach(item => {
@@ -59,10 +64,10 @@ clearButton.addEventListener("click", () => {
   clear()
 });
 
-function setCurrentNumber(content) {
+function setCurrentNumber(content, decimal) {
   const display = document.querySelector("#display");
   currentNumber = content;
-  display.textContent = parseInt(content);
+  if (decimal) display.textContent = content; else display.textContent = parseFloat(content);
 }
 
 function setPreviousNumber(input) {
@@ -73,7 +78,7 @@ function setPreviousNumber(input) {
     return;
   }
   previousNumber = input;
-  previousNumberDisplay.textContent = parseInt(input);
+  previousNumberDisplay.textContent = parseFloat(input);
   setCurrentNumber(0);
 }
 
@@ -86,7 +91,7 @@ function clear() {
 }
 
 function operate(firstN, oper, secondN) {
-  const result = operators[oper](parseInt(firstN), parseInt(secondN));
+  const result = operators[oper](parseFloat(firstN), parseFloat(secondN));
   currentNumber = "";
   userOperation = "";
   setCurrentNumber(0);
