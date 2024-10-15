@@ -1,5 +1,5 @@
 // script.js
-let currentNumber = "";
+let currentNumber = 0;
 let userOperation = "";
 let previousNumber = 0;
 
@@ -25,13 +25,13 @@ numButtons.forEach(item => {
       setPreviousNumber(0);
     }
 
-    if (String(currentNumber).length < 7) setCurrentNumber(currentNumber += (item.textContent));
+    if (String(currentNumber).length < 8) setCurrentNumber(currentNumber += (item.textContent));
   });
 });
 
 const decimalButton = buttons.querySelector("#decimalButton")
 decimalButton.addEventListener("click", () => {
-  if (parseFloat(currentNumber) % 1 == 0) setCurrentNumber(currentNumber += decimalButton.textContent, true);
+  if (!String(currentNumber).includes(".")) setCurrentNumber(currentNumber += decimalButton.textContent, true);
 });
 
 const operationButtons = buttons.querySelectorAll(".operationButton");
